@@ -1,5 +1,4 @@
 import { z } from 'zod';
-
 export const FormSchema = z.object({
   input: z.string()
     .min(4, 'minLength: 4, maxLength: 8, only latin letters')

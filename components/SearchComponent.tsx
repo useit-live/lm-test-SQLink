@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import { useFuseSearch } from '@/hooks';
-import { IFuseOptions } from 'fuse.js';
 import HighlightedText from '@/components/helper';
 import { Input } from '@/components/ui/input';
+import { FuseOptions, Item, SearchComponentProps } from '@/lib/types';
 
-interface Item {
-  body: string;
-  id: number;
-  title: string;
-  userId: number;
-}
 
-interface SearchComponentProps {
-  data: any;
-}
-
-type FuseOptions<T> = IFuseOptions<T>;
 const SearchComponent: React.FC<SearchComponentProps> = ({ data }: { data: Item[] }) => {
   const [inputValue, setInputValue] = useState('');
   const fuseOptions: FuseOptions<Item> = { keys: ['title'], includeMatches: true };

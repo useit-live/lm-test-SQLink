@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { colorOptions, FormSchema } from '@/const';
+import { colorOptions, FormSchema } from '@/lib/const';
 
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
@@ -24,10 +24,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { IconSpinner } from '@/components/icons';
 import SearchComponent from '@/components/SearchComponent';
+import { Item } from '@/lib/types';
 
 const FormComponent = () => {
   const [color, setColor] = useState('blue');
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Item[]>([]);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
