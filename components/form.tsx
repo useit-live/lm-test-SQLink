@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+
 import * as z from 'zod';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { colorOptions, FormSchema } from '@/const';
+import { colorMap, colorOptions, FormSchema } from '@/const';
 import {
   Form,
   FormControl,
@@ -19,8 +20,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import axios from 'axios';
 import { IconSpinner } from '@/components/icons';
 import SearchComponent from '@/components/SearchComponent';
-import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 interface Item {
   id: number;
@@ -31,9 +30,11 @@ interface SearchComponentProps {
   data: Item[];
 }
 
+
+type TColor = 'blue' | 'string'
+
 const FormComponent = () => {
   const [posts, setPosts] = useState([]);
-  const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -43,7 +44,9 @@ const FormComponent = () => {
     },
   });
 
-  const color = form.getValues().customColorName;
+  const customColorName = form.getValues().customColorName as keyof typeof colorMap;
+  const color = colorMap[customColorName]
+
   const isLoading = form.formState.isSubmitting;
 
   const onSetValue = (e: { preventDefault: () => void; }) => {
@@ -76,11 +79,10 @@ const FormComponent = () => {
             render={({ field }) => (
               <FormItem className="col-span-12 lg:col-span-2">
                 <FormLabel>Select custom color</FormLabel>
-                <Select onValueChange={(e) => {
-                  field.onChange(e);
-                  router.refresh();
-                }}
-                        defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select custom color" />
@@ -107,7 +109,7 @@ const FormComponent = () => {
               <FormItem>
                 <FormLabel>Type some text</FormLabel>
                 <FormControl>
-                  <Input placeholder="Standard" {...field} className={cn(`focus:ring-${color}-500`)} />
+                  <Input placeholder="Standard" {...field} className={color} />
                 </FormControl>
                 <Button variant="secondary" onClick={onSetValue}>
                   Set input value
