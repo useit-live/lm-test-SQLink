@@ -76,10 +76,11 @@ const FormComponent = () => {
             render={({ field }) => (
               <FormItem className="col-span-12 lg:col-span-2">
                 <FormLabel>Select custom color</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={(e) => {
+                  field.onChange(e);
+                  router.refresh();
+                }}
+                        defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select custom color" />
