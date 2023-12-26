@@ -18,19 +18,3 @@ export const colorOptions = [
     label: 'Green',
   },
 ];
-
-// Enum definition for supported colors
-enum Color {
-  Blue = 'blue',
-  Green = 'green',
-  // Add more colors as needed
-}
-
-type ColorMapType = {
-  [key in Color]: string;
-};
-
-export const colorMap: ColorMapType = {
-  [Color.Blue]: 'focus:ring-blue-500',
-  [Color.Green]: 'focus:ring-green-500',
-};

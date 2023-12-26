@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { colorMap, colorOptions, FormSchema } from '@/const';
+import { colorOptions, FormSchema } from '@/const';
 import {
   Form,
   FormControl,
@@ -21,19 +21,8 @@ import axios from 'axios';
 import { IconSpinner } from '@/components/icons';
 import SearchComponent from '@/components/SearchComponent';
 
-interface Item {
-  id: number;
-  title: string;
-}
-
-interface SearchComponentProps {
-  data: Item[];
-}
-
-
-type TColor = 'blue' | 'string'
-
 const FormComponent = () => {
+  const [color, setColor] = useState('blue');
   const [posts, setPosts] = useState([]);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,8 +33,13 @@ const FormComponent = () => {
     },
   });
 
-  const customColorName = form.getValues().customColorName as keyof typeof colorMap;
-  const color = colorMap[customColorName]
+  // Determine the ring color class based on the `isBlue` state
+  const ringColorClass = color === 'blue' ? 'focus:ring-blue-500' : 'focus:ring-green-500';
+
+  // This function toggles the ring color between blue and green
+  const toggleRingColor = (color: string) => {
+    setColor(color);
+  };
 
   const isLoading = form.formState.isSubmitting;
 
@@ -80,7 +74,10 @@ const FormComponent = () => {
               <FormItem className="col-span-12 lg:col-span-2">
                 <FormLabel>Select custom color</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(color) => {
+                    field.onChange(color);
+                    toggleRingColor(color);
+                  }}
                   defaultValue={field.value}
                 >
                   <FormControl>
@@ -109,7 +106,10 @@ const FormComponent = () => {
               <FormItem>
                 <FormLabel>Type some text</FormLabel>
                 <FormControl>
-                  <Input placeholder="Standard" {...field} className={color} />
+                  <Input
+                    placeholder="Standard" {...field}
+                    className={ringColorClass}
+                  />
                 </FormControl>
                 <Button variant="secondary" onClick={onSetValue}>
                   Set input value
