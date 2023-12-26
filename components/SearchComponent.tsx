@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFuseSearch } from '@/hooks';
 import { IFuseOptions } from 'fuse.js';
 import HighlightedText from '@/components/helper';
+import { Input } from '@/components/ui/input';
 
 interface Item {
   body: string;
@@ -25,10 +26,11 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ data }: { data: Item[
     setInputValue(newValue);
     search(newValue);
   };
+  console.log(results);
 
   return (
     <div className="mt-3">
-      <input
+      <Input
         className="mt-0.5"
         type="text"
         value={inputValue}
@@ -37,9 +39,10 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ data }: { data: Item[
       />
       {results.map((result, index) => {
         return (
-          <div key={index}>
+          <div key={result.item.id}>
             <HighlightedText
-              text={result.item.title}
+              title={result.item.title}
+              content={result.item.body}
               matches={result.matches!}
             />
           </div>
